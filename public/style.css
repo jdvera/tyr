@@ -1,0 +1,17 @@
+.navbar, .navbar-brand {
+    height: 100px;
+    margin: auto;
+    text-align: center;
+    width: 100%;
+    padding-top: 20px;
+}
+
+.container {
+    margin-top: 80px;
+}
+
+.btn-primary {
+    margin: auto;
+    height: 100px;
+    margin-top: 30px;
+}

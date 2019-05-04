@@ -2,8 +2,8 @@ const axios = require("axios");
 const cheerio = require("cheerio");
 
 const users = {
-    James: {
-        name: "James",
+    james: {
+        name: "james",
         spells: [
             // - Cantrips
             // "Toll the Dead",
@@ -25,9 +25,34 @@ const users = {
             "Mass Healing Word"
         ]
     },
-    Ashley: {
-        name: "Ashley",
-        spells: []
+    ashley: {
+        name: "ashley",
+        spells: [
+            // - Cantripts
+            "mage hand",
+            "guidance",
+            "shillelagh",
+            "poison spray",
+
+            // - Magic initiate cantrips
+            "sacred flame",
+            "spare the dying",
+
+            // - Spells level 1 and higher
+            // "wild cunning",
+            "cure wounds",
+            "detect magic",
+            // "snare",
+            "spike growth",
+            "locate object",
+            "enhance ability",
+
+            // - Magic initiate 1st level spell
+            "command",
+
+            // - Circle of the Shepherd spell
+            // "spirit totem"
+        ]
     }
 };
 

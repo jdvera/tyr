@@ -9,20 +9,20 @@ const users = {
             // "Toll the Dead",
             "Spare the Dying",
             "Light",
-            // "Thaumaturgy",
+            "Thaumaturgy",
 
-            // // - lvl 1
-            // "Guiding Bolt",
-            // "Detect Magic",
+            // - lvl 1
+            "Guiding Bolt",
+            "Detect Magic",
 
-            // // - lvl 2
-            // "Prayer of Healing",
-            // "Zone of Truth",
+            // - lvl 2
+            "Prayer of Healing",
+            "Zone of Truth",
 
-            // // - lvl 3
-            // "Animate Dead",
-            // "Magic Circle",
-            // "Mass Healing Word"
+            // - lvl 3
+            "Animate Dead",
+            "Magic Circle",
+            "Mass Healing Word"
         ]
     },
     Ashley: {
@@ -35,21 +35,19 @@ const resultsArr = [];
 
 getSpellInfo = (i, userName, cb) => {
     console.log("looking for " + users[userName].spells[i]);
-    axios.get(`https://roll20.net/compendium/dnd5e/${spells[i]}#content`).then(response => {
+    axios.get(`https://roll20.net/compendium/dnd5e/${users[userName].spells[i]}#content`).then(response => {
         console.log("gottem");
         const $ = cheerio.load(response.data);
 
         const Description = $("#pagecontent").text();
-        const Name = spells[i];
-
-
+        const Name = users[userName].spells[i];
 
         const spellObj = { Name, Description };
 
         $("div.attrListItem").each((j, element) => {
 
             let attrName = $(element).find(".attrName").text();
-            console.log(spells[i] + ' attrName:', attrName)
+            console.log(users[userName].spells[i] + ' attrName:', attrName)
             if (
                 attrName === "Casting Time" ||
                 attrName === "Range" ||
@@ -63,7 +61,7 @@ getSpellInfo = (i, userName, cb) => {
 
         resultsArr.push(spellObj);
 
-        if (i < spells.length - 1) {
+        if (i < users[userName].spells.length - 1) {
             i++;
             getSpellInfo(i, userName, cb);
         }
@@ -73,15 +71,4 @@ getSpellInfo = (i, userName, cb) => {
     });
 };
 
-module.exports = app => {
-    app.get("/", (req, res) => {
-        res.json(users.map(elem => elem.name));
-    });
-
-    app.get("/:userName", (req, res) => {
-        getSpellInfo(0, req.params.userName, spellData => {
-            res.json(spellData);
-        });
-    });
-}
-
+module.exports = getSpellInfo;

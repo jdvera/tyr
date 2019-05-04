@@ -1,16 +1,19 @@
 .navbar, .navbar-brand {
     height: 100px;
     margin: auto;
+    color: black !important;
     text-align: center;
     width: 100%;
-    padding-top: 20px;
+    padding-top: 18px;
 }
 
 .container {
+    color: black;
     margin-top: 80px;
 }
 
-.btn-primary {
+.btn-lg {
+    color: black;
     margin: auto;
     height: 100px;
     margin-top: 30px;

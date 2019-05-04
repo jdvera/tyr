@@ -29,26 +29,26 @@ const users = {
         name: "ashley",
         spells: [
             // - Cantripts
-            "mage hand",
-            "guidance",
-            "shillelagh",
-            "poison spray",
+            "Mage Hand",
+            "Guidance",
+            "Shillelagh",
+            "Poison Spray",
 
             // - Magic initiate cantrips
-            "sacred flame",
-            "spare the dying",
+            "Sacred Flame",
+            "Spare the Dying",
 
             // - Spells level 1 and higher
             // "wild cunning",
-            "cure wounds",
-            "detect magic",
+            "Cure Wounds",
+            "Detect Magic",
             // "snare",
-            "spike growth",
-            "locate object",
-            "enhance ability",
+            "Spike Growth",
+            "Locate Object",
+            "Enhance Ability",
 
             // - Magic initiate 1st level spell
-            "command",
+            "Command",
 
             // - Circle of the Shepherd spell
             // "spirit totem"
@@ -56,10 +56,13 @@ const users = {
     }
 };
 
-const resultsArr = [];
+let resultsArr = [];
 
 getSpellInfo = (i, userName, cb) => {
     console.log("looking for " + users[userName].spells[i]);
+    if (i === 0) {
+        resultsArr = [];
+    }
     axios.get(`https://roll20.net/compendium/dnd5e/${users[userName].spells[i]}#content`).then(response => {
         console.log("gottem");
         const $ = cheerio.load(response.data);
@@ -78,7 +81,8 @@ getSpellInfo = (i, userName, cb) => {
                 attrName === "Range" ||
                 attrName === "Level" ||
                 attrName === "Target" ||
-                attrName === "Duration"
+                attrName === "Duration" ||
+                attrName === "Classes"
             ) {
                 spellObj[attrName] = $(element).find(".attrValue").find(".value").text();
             }

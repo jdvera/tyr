@@ -95,6 +95,13 @@ getSpellInfo = (i, userName, db, cb) => {
             getSpellInfo(i, userName, db, cb);
         }
         else {
+            db.spells.insert({
+                name: userName,
+                spells: resultsArr
+            }, (err, inserted) => {
+                if (err) throw err;
+                console.log(inserted);
+            });
             cb(resultsArr);
         }
     });

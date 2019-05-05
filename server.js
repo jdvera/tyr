@@ -9,7 +9,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 
-const databaseUrl = "spellsdb";
+const databaseUrl = process.env.MONGODB_URI || "spellsdb";
 const collections = ["spells"];
 
 const db = mongojs(databaseUrl, collections);
@@ -18,6 +18,7 @@ db.on("error", function (error) {
 });
 
 const getSpellInfo = require("./util/getSpellInfo.js");
+const getOneSpell = require("./util/getOneSpell.js");
 
 // --- ROUTES
 app.get("/user/:username", (req, res) => {
@@ -29,9 +30,36 @@ app.get('/', function (req, res) {
 });
 
 app.get("/api/:username", (req, res) => {
-    getSpellInfo(0, req.params.username, db, spellData => {
-        res.json(spellData);
+    db.spells.find({ name: req.params.username }, (err, data) => {
+        if (err) throw err;
+
+        if (data.length === 0) {
+            console.log("no data for user");
+            getSpellInfo(0, req.params.username, db, spellData => {
+                res.json(spellData);
+            });
+        }
+        else {
+            res.json(data[0].spells);
+        }
     });
+});
+
+app.post("/api/add", (req, res) => {
+    const { name, spell } = req.body;
+    getOneSpell(name, spell, spellObj => {
+        db.spells.update({ name }, {
+            $push: { spells: spellObj }
+        }, () => res.send(true));
+    });
+});
+
+app.post("/api/remove", (req, res) => {
+    console.log(req.body);
+    const { name, spell } = req.body;
+    db.spells.update({ name }, {
+        $pull: { spells: { Name: spell } }
+    }, () => res.send(true));
 });
 
 app.listen(PORT, function () {

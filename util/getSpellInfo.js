@@ -58,7 +58,7 @@ const users = {
 
 let resultsArr = [];
 
-getSpellInfo = (i, userName, cb) => {
+getSpellInfo = (i, userName, db, cb) => {
     console.log("looking for " + users[userName].spells[i]);
     if (i === 0) {
         resultsArr = [];
@@ -92,7 +92,7 @@ getSpellInfo = (i, userName, cb) => {
 
         if (i < users[userName].spells.length - 1) {
             i++;
-            getSpellInfo(i, userName, cb);
+            getSpellInfo(i, userName, db, cb);
         }
         else {
             cb(resultsArr);

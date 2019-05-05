@@ -9,7 +9,10 @@ const loadSpells = () => {
 
         $(`#spell-data`).append(div);
 
-        console.log(spellData);
+        if (!spellData) {
+            $(`#spell-data`).append("No spells yet 💁‍");
+            return;
+        }
 
         let color = "";
         switch (window.location.pathname.split("/")[2]) {
@@ -22,10 +25,12 @@ const loadSpells = () => {
             case "athena":
                 color = "info";
                 break;
-            case "shiobhan":
+            case "siobhan":
                 color = "secondary";
                 break;
         }
+
+        const spellsObj = {};
 
         spellData.forEach(elem => {
             let cardWrapper = $(`<div class="card text-white bg-${color} mb-3">`);
@@ -53,8 +58,24 @@ const loadSpells = () => {
             body.append(description);
 
             cardWrapper.append(body);
-            $("#spell-data").append(cardWrapper);
+            if (spellsObj[elem.Level]) {
+                spellsObj[elem.Level].push(cardWrapper);
+            }
+            else {
+                spellsObj[elem.Level] = [cardWrapper];
+            }
         });
+
+        for (level in spellsObj) {
+            const levelWrapper = $(`<div id="level-wrapper">`);
+            const levelHeader = $(`<h2>`).text(level === "0" ? "Cantrips" : `Level ${level}`);
+            levelWrapper.append(levelHeader);
+            levelWrapper.append($(`<hr>`));
+            spellsObj[level].forEach(elem => {
+                levelWrapper.append(elem);
+            });
+            $(`#spell-data`).append(levelWrapper);
+        }
     });
 };
 

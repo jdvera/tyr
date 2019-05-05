@@ -30,18 +30,12 @@ app.get('/', function (req, res) {
 });
 
 app.get("/api/:username", (req, res) => {
-    db.spells.find({ name: req.params.username }, (err, data) => {
+    db.spells.findOne({ name: req.params.username }, (err, data) => {
         if (err) throw err;
-
-        if (data.length === 0) {
-            console.log("no data for user");
-            getSpellInfo(0, req.params.username, db, spellData => {
-                res.json(spellData);
-            });
+        if (!data) {
+            return res.send(false);
         }
-        else {
-            res.json(data[0].spells);
-        }
+        res.json(data.spells);
     });
 });
 

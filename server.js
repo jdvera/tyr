@@ -17,7 +17,6 @@ db.on("error", function (error) {
     console.log("Database Error:", error);
 });
 
-const getSpellInfo = require("./util/getSpellInfo.js");
 const getOneSpell = require("./util/getOneSpell.js");
 
 // --- ROUTES
@@ -33,8 +32,14 @@ app.get("/api/:username", (req, res) => {
     db.spells.findOne({ name: req.params.username }, (err, data) => {
         if (err) throw err;
         if (!data) {
-            console.log("didnt find anything on the user")
-            getSpellInfo(0, req.params.username, db, (resultsArr) => res.json(resultsArr))
+            db.spells.insert({
+                name: userName,
+                spells: []
+            }, (err, inserted) => {
+                if (err) throw err;
+                console.log(inserted);
+                cb(inserted.spells);
+            });
         }
         else {
             res.json(data.spells);

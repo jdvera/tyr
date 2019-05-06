@@ -53,12 +53,30 @@ const users = {
             // - Circle of the Shepherd spell
             // "spirit totem"
         ]
+    },
+    athena: {
+        name: "athena",
+        spells: []
+    },
+    siobhan: {
+        name: "siobhan",
+        spells: []
     }
 };
 
 let resultsArr = [];
 
 getSpellInfo = (i, userName, db, cb) => {
+    if (users[userName].spells.length === 0) {
+        return db.spells.insert({
+            name: userName,
+            spells: []
+        }, (err, inserted) => {
+            if (err) throw err;
+            console.log(inserted);
+            cb(inserted.spells);
+        });
+    }
     console.log("looking for " + users[userName].spells[i]);
     if (i === 0) {
         resultsArr = [];

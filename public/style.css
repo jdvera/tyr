@@ -19,7 +19,7 @@
     margin-top: 30px;
 }
 
-#spell-data {
+#spell-data, #spell-wrapper {
     margin: 20px 0px;
     display: flex;
     flex-direction: column;

@@ -33,9 +33,12 @@ app.get("/api/:username", (req, res) => {
     db.spells.findOne({ name: req.params.username }, (err, data) => {
         if (err) throw err;
         if (!data) {
-            return res.send(false);
+            console.log("didnt find anything on the user")
+            getSpellInfo(0, req.params.username, db, (resultsArr) => res.json(resultsArr))
         }
-        res.json(data.spells);
+        else {
+            res.json(data.spells);
+        }
     });
 });
 

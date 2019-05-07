@@ -28,6 +28,7 @@ class Main extends Component {
                         </button>
                     </a>
                 )}
+                {/* TODO make a button that will go to a page for the DM (we haven't made that page at all yet) */}
             </div>
         );
     };

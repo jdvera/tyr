@@ -1,5 +1,6 @@
 import React from "react";
 
+// TODO rework this template to look the way we'd like
 function SpellCard(props) {
     return (
         <div class="card text-white bg-primary mb-3" style="max-width: 20rem;">

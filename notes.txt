@@ -5,7 +5,3 @@ features:
     doesn't allow:
     - spells you already have
     - spells not in the PHB
-- 
-- 
-- 
-- 

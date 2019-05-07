@@ -31,21 +31,23 @@ const getOneSpell = require("./util/getOneSpell.js");
 
 
 // --- ROUTES
-// app.get("/user/:username", (req, res) => {
-//     res.sendFile(path.join(__dirname + '/public/user.html'));
-// });
-
-// app.get('/', function (req, res) {
-//     res.sendFile(path.join(__dirname + '/public/index.html'));
-// });
+app.get("/api/allUsers", (req, res) => {
+    db.spells.find({}, (err, doc) => {
+        const characterNames = doc.map(elem => {
+            const { name, character } = elem;
+            return { name, character };
+        });
+        res.json(characterNames);
+    });
+});
 
 app.get("/api/:username", (req, res) => {
-    db.spells.findOne({ name: req.params.username }, (err, data) => {
+    db.spells.findOne({ name: req.params.username }, (err, doc) => {
         if (err) {
             console.log(err);
             res.redirect("/");
         }
-        else if (!data) {
+        else if (!doc) {
             db.spells.insert({
                 name: userName,
                 spells: []
@@ -56,7 +58,7 @@ app.get("/api/:username", (req, res) => {
             });
         }
         else {
-            res.json(data.spells);
+            res.json(doc.spells);
         }
     });
 });

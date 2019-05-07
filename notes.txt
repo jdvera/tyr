@@ -1,0 +1,21 @@
+features:
+- lists spells in the Player Handbook, sorted by lvl
+- 'x' to remove spells
+- add new spells, with an autocomplete input
+    doesn't allow:
+    - spells you already have
+    - spells not in the PHB
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 

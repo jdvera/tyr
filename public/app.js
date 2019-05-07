@@ -27,17 +27,17 @@ const loadSpells = () => {
         const spellsObj = {};
 
         spellData.forEach(elem => {
-            let cardWrapper = $(`<div class="card text-white bg-${color} mb-3">`);
-            let body = $(`<div class="card-body">`);
+            const cardWrapper = $(`<div class="card text-white bg-${color} mb-3">`);
+            const body = $(`<div class="card-body">`);
 
-            let button = $(`<button class="close" data-dismiss="modal" aria-label="Close">`);
-            let x = $(`<span aria-hidden="true" class="remove" data-name="${elem.Name}">&times;</span>`);
+            const button = $(`<button class="close" aria-label="Close">`);
+            const x = $(`<span aria-hidden="true" class="remove" data-name="${elem.Name}">&times;</span>`);
 
             button.append(x);
             body.append(button);
-            body.append($(`<h3>${elem.Name}</h3>`));
+            body.append($(`<a href="${elem.url}" target="_blank"><h3>${elem.Name}</h3></a>`));
 
-            let ul = $(`<ul>`);
+            const ul = $(`<ul>`);
             ul.append(`
                 <li>Casting Time: ${elem["Casting Time"]}</li>
                 <li>Range: ${elem.Range}</li>
@@ -48,10 +48,11 @@ const loadSpells = () => {
             `);
             body.append(ul);
 
-            let description = $(`<p>${elem.Description}</p>`);
+            const description = $(`<p>${elem.Description}</p>`);
             body.append(description);
 
-            cardWrapper.append(body);
+            cardWrapper.append(body)
+
             if (spellsObj[elem.Level]) {
                 spellsObj[elem.Level].push(cardWrapper);
             }
@@ -60,32 +61,51 @@ const loadSpells = () => {
             }
         });
 
+        const accordion = $(`<div class="accordion" id="accordion-main">`);
+
         for (level in spellsObj) {
-            const levelWrapper = $(`<div id="level-wrapper">`);
-            const levelHeader = $(`<h2>`).text(level === "0" ? "Cantrips" : `Level ${level}`);
-            levelWrapper.append(levelHeader);
-            levelWrapper.append($(`<hr>`));
+            const cardHeader = $(`<div class="card-header" id="heading${level}">`);
+            const h5 = $(`<h5 class="mb-0">`);
+            const accordButton = $(`<button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapse${level}" aria-expanded="${level === "0"}" aria-controls="collapse${level}">`);
+            accordButton.text(level === "0" ? "Cantrips" : `Level ${level}`);
+            h5.append(accordButton);
+            cardHeader.append(h5);
+
+            const collapseBody = $(`<div id="collapse${level}" class="collapse${level === "0" ? " show" : ""}" aria-labelledby="heading${level}" data-parent="#accordion-main">`);
+
             spellsObj[level].forEach(elem => {
-                levelWrapper.append(elem);
+                collapseBody.append(elem);
             });
-            $(`#spell-data`).append(levelWrapper);
+
+            const levelWrapper = $(`<div class="card">`);
+            levelWrapper.append(cardHeader).append(collapseBody);
+            accordion.append(levelWrapper);
         }
+
+        $(`#spell-data`).append(accordion);
     });
 };
 
-$(`#spell-data`).on(`click`, `#submit`, (event) => {
+$(`#new-spell`).on(`submit`, event => {
     event.preventDefault();
-    const spellName = $(`#spell-name`).val();
-    console.log(spellName);
+    $(".invalid-feedback").empty().hide();
 
     const apiObj = {
         name: window.location.pathname.split("/")[2],
-        spell: spellName
+        spell: $(`#spell-name`).val()
     };
-    $.post("/api/add", apiObj, loadSpells);
+
+    $.post("/api/add", apiObj, res => {
+        if (!res.status) {
+            $(".invalid-feedback").text(res.message).show();
+        }
+        else {
+            loadSpells()
+        };
+    });
 });
 
-$(`#spell-data`).on(`click`, `.remove`, function () {
+$(`#spell-wrapper`).on(`click`, `.remove`, function () {
     const spellName = $(this).attr("data-name");
     console.log("removing: " + spellName);
 
@@ -419,7 +439,9 @@ const spellList = [
 ];
 
 $(`#spell-name`).autocomplete({
-    source: spellList
+    source: spellList,
+    minLength: 3,
+    autoFocus: true
 })
 
 loadSpells();

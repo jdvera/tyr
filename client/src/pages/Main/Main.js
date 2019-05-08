@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Link } from "react-router-dom";
 import API from "../../util/API.js";
 import "./Main.css";
 
@@ -22,11 +23,11 @@ class Main extends Component {
         return (
             <div className="container">
                 {this.state.users.map((user, i) =>
-                    <a href={`user/${user.name}`}>
+                    <Link to={`user/${user.name}`}>
                         <button type="button" className={`btn btn-${this.state.colors[i]} btn-lg btn-block`}>
                             {user.character}
                         </button>
-                    </a>
+                    </Link>
                 )}
                 {/* TODO make a button that will go to a page for the DM (we haven't made that page at all yet) */}
             </div>

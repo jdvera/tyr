@@ -5,10 +5,6 @@
     align-items: center;
 }
 
-.card {
-    width: 800px;
-}
-
 #warning {
     width: 100%;
     text-align: center;
@@ -21,8 +17,4 @@
 
 #submit {
     margin-top: 10px;
-}
-
-.form-group {
-    width: 800px;
 }

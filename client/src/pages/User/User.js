@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import API from "../../util/API.js";
-import spellList from "../../util/spellList.js";
+import AddInput from "../../components/AddInput";
+import LevelWrapper from "../../components/LevelWrapper";
 import SpellCard from "../../components/SpellCard";
-// import AutoComplete from "../../components/AutoComplete";
 import "./User.css";
 
 class User extends Component {
@@ -19,48 +19,64 @@ class User extends Component {
 
     handleInputChange = event => {
         const { name, value } = event.target;
-        this.setState({ [name]: value }, () => console.log(this.state));
+        this.setState({ [name]: value });
     }
 
     addSpell = () => {
         //TODO finish this method
     }
 
-    // TODO removeCard method
+    // TODO removeSpell method
+
+    renderSpellsByLevel = () => {
+        const spellsObj = {};
+        this.state.spells.forEach((elem, i) => {
+            let color;
+            switch (this.props.match.params.username) {
+                case "james":
+                    color = "danger";
+                    break;
+                case "ashley":
+                    color = "success";
+                    break;
+                case "athena":
+                    color = "info";
+                    break;
+                case "siobhan":
+                    color = "secondary";
+                    break;
+                default:
+                    color = "primary";
+                    break;
+            }
+
+            if (spellsObj[elem.Level]) {
+                spellsObj[elem.Level].push(<SpellCard {...elem} key={i} color={color} />);
+            }
+            else {
+                spellsObj[elem.Level] = [<SpellCard {...elem} key={i} color={color} />];
+            }
+        });
+
+        const renderThis = [];
+
+        for (let level in spellsObj) {
+            renderThis.push(
+                <LevelWrapper level={level}>
+                    {spellsObj[level]}
+                </LevelWrapper>
+            );
+        }
+
+        return renderThis;
+    }
 
     render() {
         return (
             <div className="container spell-wrapper">
-                {/* TODO potentially make the form below into it's own component? */}
-                <form id="new-spell" className="form-group">
-                    {/* <input name="spellInput" value={this.state.spellInput} className="form-control" placeholder="Magic Missile" onChange={this.handleInputChange} /> */}
-                    <AutoComplete suggestions={spellList} />
-                    <div className="invalid-feedback"></div>
-                    <button type="submit" className="btn btn-primary">Submit</button><br />
-                </form>
+                <AddInput handleInputChange={this.handleInputChange} spellInput={this.state.spellInput} />
                 <div id="spell-data">
-                    {this.state.spells.map((elem, i) => {
-                        let color;
-                        switch (this.props.match.params.username) {
-                            case "james":
-                                color = "danger";
-                                break;
-                            case "ashley":
-                                color = "success";
-                                break;
-                            case "athena":
-                                color = "info";
-                                break;
-                            case "siobhan":
-                                color = "secondary";
-                                break;
-                            default:
-                                color = "primary";
-                                break;
-                        }
-
-                        return <SpellCard {...elem} key={i} color={color} />;
-                    })}
+                    {this.renderSpellsByLevel()}
                 </div>
             </div>
         );

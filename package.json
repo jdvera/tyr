@@ -21,7 +21,8 @@
     "cheerio": "^1.0.0-rc.3",
     "express": "^4.16.4",
     "if-env": "^1.0.4",
-    "mongojs": "^2.6.0"
+    "mongojs": "^2.6.0",
+    "react-autocomplete": "^1.8.1"
   },
   "devDependencies": {
     "concurrently": "^4.1.0"

@@ -20,18 +20,6 @@ function SpellCard(props) {
                     <li>Duration: {props.Duration}</li>
                     <li>Classes: {props.Classes}</li>
                 </ul>
-
-                {/*                 
-                <ListGroup variant="flush">
-                    <Item variant={props.color}>Casting Time: {props["Casting Time"]}</Item>
-                    <Item variant={props.color}>Range: {props.Range}</Item>
-                    <Item variant={props.color}>Level: {props.Level === "0" ? "Cantrip" : props.Level}</Item>
-                    <Item variant={props.color}>Target: {props.Target}</Item>
-                    <Item variant={props.color}>Duration: {props.Duration}</Item>
-                    <Item variant={props.color}>Classes: {props.Classes}</Item>
-                </ListGroup>
-                */}
-
                 <p>{props.Description}</p>
             </Body>
         </Card>

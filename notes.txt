@@ -4,4 +4,4 @@ features:
 - add new spells, with an autocomplete input
     doesn't allow:
     - spells you already have
-    - spells not in the PHB
+    - spells not in the PHBz

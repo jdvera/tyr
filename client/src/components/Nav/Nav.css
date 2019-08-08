@@ -1,8 +1,10 @@
-.navbar, .navbar-brand {
-    height: 100px;
-    margin: auto;
-    color: black !important;
-    text-align: center;
-    width: 100%;
-    padding-top: 18px;
+.navbar {
+    color: black;
+    /* padding-top: 18px; */
+    /* height: 100px; */
+    /* text-align: center; */
+}
+
+.navbar-brand {
+    padding-left: 15px;
 }

@@ -25,7 +25,7 @@ function LevelWrapper(props) {
     return (
         <Card className="mb-5">
             <Body>
-                <h3>{props.level === "0" ? "Cantrips" : `Level ${props.level}`}</h3>
+                <h3>{props.level === "Cantrip" ? "Cantrips" : `${props.level} Level`}</h3>
                 {props.children}
             </Body>
         </Card>

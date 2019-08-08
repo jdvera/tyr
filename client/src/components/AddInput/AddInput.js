@@ -19,7 +19,7 @@ const styles = {
     }
 };
 
-let i;
+let i = 0;
 
 const badDontDoThis = () => {
     i++;
@@ -52,7 +52,7 @@ function AddInput(props) {
                         <Prepend>
                             <Text id="inputGroup-sizing-default">Add Spell</Text>
                         </Prepend>
-                        <FormControl {...props} aria-label="Default" aria-describedby="inputGroup-sizing-default" />
+                        <FormControl {...props} placeholder="e.g. Magic Missile" aria-label="Default" aria-describedby="inputGroup-sizing-default" />
                     </InputGroup>
                 }
             />

@@ -7,73 +7,72 @@ import "./User.css";
 
 class User extends Component {
     state = {
+        //  From database
+        _id: "",
+        character: "",
+        user: "",
         spells: [],
+        variant: "",
+
+        //  Input
         spellInput: ""
     };
 
     componentDidMount() {
-        API.getSpells(this.props.match.params.username).then(res => {
-            this.setState({ spells: res.data });
+        API.getUserData(this.props.match.params.userId).then(({ data }) => {
+            this.setState(data);
         });
     };
 
     handleInputChange = event => {
         const { name, value } = event.target;
         this.setState({ [name]: value });
-    }
+    };
 
     addSpell = () => {
-        //TODO finish this method
-    }
+        const { _id, spellInput } = this.state;
+        const apiObj = { _id, spellInput };
+        API.addSpell(apiObj).then(({ data }) => {
+            console.log('data:', data);
+            API.getUserData(this.props.match.params.userId).then(({ data }) => {
+                this.setState(data);
+            });
+        })
+    };
 
     // TODO removeSpell method
 
     renderSpellsByLevel = () => {
         const spellsObj = {};
+        console.log('first spell:', this.state.spells[0]);
         this.state.spells.forEach((elem, i) => {
-            let color;
-            switch (this.props.match.params.username) {
-                case "james":
-                    color = "danger";
-                    break;
-                case "ashley":
-                    color = "success";
-                    break;
-                case "athena":
-                    color = "info";
-                    break;
-                case "siobhan":
-                    color = "secondary";
-                    break;
-                default:
-                    color = "primary";
-                    break;
-            }
-
-            if (spellsObj[elem.Level]) {
-                spellsObj[elem.Level].push(<SpellCard {...elem} key={i} color={color} />);
+            if (spellsObj[elem.level]) {
+                spellsObj[elem.level].push(<SpellCard {...elem} key={i} variant={this.state.variant} />);
             }
             else {
-                spellsObj[elem.Level] = [<SpellCard {...elem} key={i} color={color} />];
+                spellsObj[elem.level] = [<SpellCard {...elem} key={i} variant={this.state.variant} />];
             }
         });
 
+        const levelOrder = ["Cantrip", "1st", "2nd", "3rd", "4th", "5th"];
         const renderThis = [];
 
-        for (let level in spellsObj) {
-            renderThis.push(
-                <LevelWrapper level={level}>
-                    {spellsObj[level]}
-                </LevelWrapper>
-            );
-        }
+        levelOrder.forEach(elem => {
+            if (spellsObj[elem]) {
+                renderThis.push(
+                    <LevelWrapper key={renderThis.length} level={elem}>
+                        {spellsObj[elem]}
+                    </LevelWrapper>
+                );
+            }
+        });
 
         return renderThis;
-    }
+    };
 
     render() {
         return (
-            <div className="container spell-wrapper">
+            <div id="user-wrapper">
                 <AddInput handleInputChange={this.handleInputChange} spellInput={this.state.spellInput} />
                 <div id="spell-data">
                     {this.renderSpellsByLevel()}

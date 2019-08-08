@@ -15,75 +15,89 @@ if (process.env.NODE_ENV === "production") {
 
 // - Mongo Setup
 const databaseUrl = process.env.MONGODB_URI || "spellsdb";
-const collections = ["spells"];
+const collections = ["spells", "characters", "characterSpells"];
 
 const db = mongojs(databaseUrl, collections);
-db.on("error", function (error) {
-    console.log("Database Error:", error);
-});
-
-
-// - Scraping Function
-const getOneSpell = require("./util/getOneSpell.js");
-
-
-
+db.on("error", error => console.log("Database Error:", error));
+db.on('connect', () => console.log('database connected'));
 
 
 // --- ROUTES
 app.get("/api/allUsers", (req, res) => {
-    db.spells.find({}, (err, doc) => {
-        const characterNames = doc.map(elem => {
-            const { name, character } = elem;
-            return { name, character };
-        });
-        res.json(characterNames);
+    db.characters.find({}, (err, doc) => {
+        res.json(doc);
     });
 });
 
-app.get("/api/:username", (req, res) => {
-    db.spells.findOne({ name: req.params.username }, (err, doc) => {
+app.get("/api/user/:id", (req, res) => {
+    const { id } = req.params;
+    db.characters.findOne({ _id: mongojs.ObjectID(id) }, (err, charDoc) => {
         if (err) {
             console.log(err);
             res.redirect("/");
         }
-        else if (!doc) {
-            db.spells.insert({
-                name: userName,
-                spells: []
-            }, (err, inserted) => {
-                if (err) throw err;
-                console.log(inserted);
-                res.json(inserted.spells);
-            });
-        }
         else {
-            res.json(doc.spells);
+            db.characterSpells.find({ characterId: mongojs.ObjectID(id) }, (err, charSpellsDoc) => {
+                if (err) {
+                    console.log(err);
+                    return res.send(err);
+                }
+                const spellIdArr = charSpellsDoc.map(elem => mongojs.ObjectID(elem.spellId));
+                db.spells.find({
+                    _id: {
+                        $in: spellIdArr
+                    }
+                }, (err, spellsDoc) => {
+                    res.json({ ...charDoc, spells: spellsDoc });
+                });
+            });
         }
     });
 });
 
-app.post("/api/add", (req, res) => {
-    const { name, spell } = req.body;
-    db.spells.findOne({ name }, (err, doc) => {
-        if (err) throw err;
-        const spellNames = doc.spells.map(elem => elem.Name);
-        if (spellNames.includes(spell)) {
-            return res.json({
-                status: false,
-                message: "You already have that spell"
-            });
+app.get("/api/character-name/:id", (req, res) => {
+    const { id } = req.params;
+    db.characters.findOne({ _id: mongojs.ObjectID(id) }, (err, charDoc) => {
+        if (err) {
+            return res.json(err);
         }
+        const { character } = charDoc;
+        res.json({ character });
+    });
+});
 
-        getOneSpell(spell, data => {
-            if (!data.status) {
-                return res.send(data);
-            }
-            db.spells.update({ name }, {
-                $push: { spells: data.spellObj }
-            }, () => res.send(data));
+app.post("/api/add", (req, res) => {
+    const { characterId, spellName } = req.body;
+    // Getting the id of the new spell
+    db.spells.findOne({ name: spellName }, (err1, newSpellDoc) => {
+        if (err1) throw err1;
+        console.log('id of new spell:', newSpellDoc._id);
+
+        db.characterSpells.findOne({
+            spellId: newSpellDoc._id,
+            characterId
+        }, (err2, checkDoc) => {
+            if (err2) throw err2;
+            db.characters.find({ characterId }, (err3, doc) => {
+                if (err3) throw err3;
+                const spellsArr = doc.map(elem => elem.spellId);
+
+
+                // getOneSpell(spell, data => {
+                //     if (!data.status) {
+                //         return res.send(data);
+                //     }
+                //     db.spells.update({ name }, {
+                //         $push: { spells: data.spellObj }
+                //     }, () => res.send(data));
+                // });
+                db.spells.insert({ characterId, spellId }, (err, doc) => {
+                    if (err) throw err;
+                    console.log('doc:', doc)
+                    res.json(doc)
+                })
+            });
         });
-
     });
 });
 
@@ -95,6 +109,6 @@ app.post("/api/remove", (req, res) => {
     }, () => res.send(true));
 });
 
-app.listen(PORT, function () {
+app.listen(PORT, function() {
     console.log("App running on port " + PORT + "!");
 });

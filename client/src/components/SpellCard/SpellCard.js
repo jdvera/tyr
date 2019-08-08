@@ -5,25 +5,25 @@ import Button from "react-bootstrap/Button";
 
 function SpellCard(props) {
     return (
-        <Card className={`text-white mb-3 bg-${props.color}`}>
+        <Card className={`text-white mb-3 bg-${props.variant}`}>
             <Body>
-                <Button variant={props.color} className="close" aria-label="Close">
-                    <span aria-hidden="true" className="remove" data-name={props.Name}>&times;</span>
+                <Button variant={props.variant} className="close" aria-label="Close">
+                    <span aria-hidden="true" className="remove" data-name={props.name}>&times;</span>
                 </Button>
                 {/* eslint-disable-next-line */}
-                <a href={props.url} target="_blank"><h3>{props.Name}</h3></a>
+                <a href={props.url} target="_blank"><h3>{props.name}</h3></a>
                 <ul>
-                    <li>Casting Time: {props["Casting Time"]}</li>
-                    <li>Range: {props.Range}</li>
-                    <li>Level: {props.Level === "0" ? "Cantrip" : props.Level}</li>
-                    <li>Target: {props.Target}</li>
-                    <li>Duration: {props.Duration}</li>
-                    <li>Classes: {props.Classes}</li>
+                    <li>Casting Time: {props.casting_time}</li>
+                    <li>Range: {props.range}</li>
+                    {/* <li>Level: {props.level === "0" ? "Cantrip" : props.level}</li> */}
+                    {/* <li>Target: {props.Target}</li> */}
+                    <li>Duration: {props.duration}</li>
+                    {/* <li>Classes: {Object.keys(props.class).join(", ")}</li> */}
                 </ul>
-                <p>{props.Description}</p>
+                <p>{props.description}</p>
             </Body>
         </Card>
     );
-}
+};
 
 export default SpellCard;

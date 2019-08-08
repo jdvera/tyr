@@ -1,15 +1,18 @@
 import React from "react";
+import Navbar, { Brand } from "react-bootstrap/Navbar";
+import Container from "react-bootstrap/Container";
+// import { Link } from "react-router-dom";
 import "./Nav.css";
 
 function Nav(props) {
-    const home = window.location.pathname.length === 1;
     return (
-        <nav className="navbar navbar-expand-lg navbar-dark bg-primary">
-            {home ? <h1 class="navbar-brand">Choose Your Character</h1> :
-                <a className="navbar-brand" href="/">Back to Character List</a>
-            }
-        </nav>
+        <Navbar fixed="top" bg="primary">
+            <Container>
+                <Brand href="/">Spells!</Brand>
+                <span>{props.character}</span>
+            </Container>
+        </Navbar>
     );
-}
+};
 
 export default Nav;
